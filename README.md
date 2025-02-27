@@ -55,7 +55,6 @@ python main.py <image_url>
 
 ## Output
 - Stores processed data in `data.csv`
-- Saves best image selection in `best_images.csv`
 - Stores processed images in the `processed_images/` directory
 
 ## License
