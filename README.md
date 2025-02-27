@@ -27,7 +27,7 @@ This project is an automated pipeline that processes product images, extracts br
 - OpenAI API key
 - Replicate API key
 - Google Custom Search API key and CX ID
-- Required Python packages (install via `requirements.txt` if provided)
+- Required Python packages (install via `requirements.txt`)
 
 ### Setup
 1. Clone the repository:
