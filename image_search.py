@@ -2,14 +2,18 @@ import os
 import csv
 import requests
 import logging
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# Configuration
-API_KEY = "AIzaSyDPoKBAmGCz1Qly5qOVsEHBw57TWhdVE4g"
-CX = "56be6c13292f14170"
+# Configuration from environment variables
+API_KEY = os.getenv("GOOGLE_API_KEY")
+CX = os.getenv("GOOGLE_CX")
 SEARCH_URL = "https://www.googleapis.com/customsearch/v1"
 
 def search_images(query, num_results=10):
@@ -23,6 +27,11 @@ def search_images(query, num_results=10):
     Returns:
         list: List of image items
     """
+    # Verify API credentials are available
+    if not API_KEY or not CX:
+        logger.error("Missing API credentials. Set GOOGLE_API_KEY and GOOGLE_CX environment variables.")
+        return []
+        
     all_items = []
     for i in range(0, num_results, 5):
         params = {
