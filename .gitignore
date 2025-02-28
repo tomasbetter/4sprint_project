@@ -1,0 +1,23 @@
+# Ignore virtual environments
+env/
+.venv/
+
+# Ignore Python cache files
+__pycache__/
+
+# Ignore the project directory (if you don't want to track it)
+4sprint_project/
+
+# Ignore common Python artifacts
+*.pyc
+*.pyo
+*.pyd
+.Python
+python-venv/
+
+# Ignore IDE and OS-specific files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+.DS_Store
