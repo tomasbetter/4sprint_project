@@ -1,9 +1,8 @@
 import os
 import cv2
 import numpy as np
-import csv
-import requests
 import pandas as pd
+import requests
 from PIL import Image
 from pathlib import Path
 from io import BytesIO
@@ -12,11 +11,6 @@ import logging
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-
-# Configuration
-API_KEY = "AIzaSyDPoKBAmGCz1Qly5qOVsEHBw57TWhdVE4g"
-CX = "56be6c13292f14170"
-SEARCH_URL = "https://www.googleapis.com/customsearch/v1"
 
 class ProductImageSelector:
     """
@@ -183,42 +177,15 @@ class ProductImageSelector:
         logger.info(f"Saved best images to {self.output_csv}")
 
 
-def search_images(query, num_results=10):
-    all_items = []
-    for i in range(0, num_results, 5):
-        params = {"q": query, "cx": CX, "key": API_KEY, "searchType": "image", "num": min(5, num_results - i), "start": i+1}
-        response = requests.get(SEARCH_URL, params=params)
-        if response.status_code == 200:
-            all_items.extend(response.json().get("items", []))
-        else:
-            print(f"Error fetching images for {query}: {response.status_code}")
-            break
-    return all_items[:num_results]
-
-
-def fetch_images(input_csv, output_csv):
-    if not os.path.exists(input_csv):
-        print(f"Input file {input_csv} not found!")
-        return
-
-    results = []
-    with open(input_csv, "r") as infile:
-        reader = csv.DictReader(infile)
-        for row in reader:
-            query = f"{row['brand']} {row['product_name']}"
-            print(f"Searching images for: {query}")
-            for image in search_images(query, num_results=10):
-                results.append({"brand": row['brand'], "product_name": row['product_name'], "image_url": image.get("link")})
-
-    with open(output_csv, "w", newline="") as outfile:
-        writer = csv.DictWriter(outfile, fieldnames=["brand", "product_name", "image_url"])
-        writer.writeheader()
-        writer.writerows(results)
-    print(f"Image search results saved to {output_csv}")
-
-
 if __name__ == "__main__":
-    # Example usage when run directly
-    fetch_images("updated_all_products.csv", "image_search_results.csv")
-    selector = ProductImageSelector("image_search_results.csv", "best_images.csv")
+    import sys
+    
+    if len(sys.argv) != 3:
+        print("Usage: python image_selector.py <input_csv> <output_csv>")
+        sys.exit(1)
+        
+    input_csv = sys.argv[1]
+    output_csv = sys.argv[2]
+    
+    selector = ProductImageSelector(input_csv, output_csv)
     selector.select_best_images()
